@@ -3,9 +3,29 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>API Full Stack Project</title>
+    <title>Space Explorer</title>
+    <link rel="stylesheet" href="index.css" />
   </head>
   <body>
-    <!-- You code goes here-->
+    <main class="app-shell">
+      <section class="hero">
+        <h1>NASA Space Explorer</h1>
+        <p>Click the button to load a random Astronomy Picture of the Day.</p>
+        <button id="loadButton" type="button">Show a Random Celestial Body</button>
+      </section>
+
+      <section id="result" class="result">
+        <div class="media-container" id="mediaContainer"></div>
+        <div class="info-panel">
+          <h2 id="title">Title</h2>
+          <p id="date">Date</p>
+          <p id="description">Description</p>
+        </div>
+      </section>
+
+      <section id="error" class="error hidden"></section>
+    </main>
+
+    <script src="index.js" defer></script>
   </body>
 </html>
