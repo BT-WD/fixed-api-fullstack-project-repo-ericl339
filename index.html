@@ -12,6 +12,20 @@
         <h1>NASA Space Explorer</h1>
         <p>Click the button to load a random Astronomy Picture of the Day.</p>
         <button id="loadButton" type="button">Show a Random Space Image</button>
+        
+        <div class="search-section">
+          <h3>Or search by date:</h3>
+          <div class="search-controls">
+            <input 
+              type="date" 
+              id="dateInput" 
+              min="1995-06-16" 
+              max=""
+              placeholder="Select a date"
+            />
+            <button id="searchButton" type="button">Search Date</button>
+          </div>
+        </div>
       </section>
 
       <section id="result" class="result hidden">

@@ -10,6 +10,8 @@ const viewFavoritesButton = document.getElementById('viewFavoritesButton');
 const favoritesSection = document.getElementById('favorites');
 const favoritesList = document.getElementById('favoritesList');
 const closeFavoritesButton = document.getElementById('closeFavoritesButton');
+const dateInput = document.getElementById('dateInput');
+const searchButton = document.getElementById('searchButton');
 
 const FAVORITES_STORAGE_KEY = 'space_explorer_favorites';
 let currentApod = null;
@@ -27,6 +29,41 @@ async function fetchRandomApod() {
     displayApod(apod);
   } catch (error) {
     showError(error.message);
+    resultSection.classList.add('hidden');
+  } finally {
+    setLoading(false);
+  }
+}
+
+async function fetchApodByDate() {
+  const date = dateInput.value;
+  if (!date) {
+    showError('Please select a date.');
+    return;
+  }
+
+  setLoading(true);
+  hideError();
+
+  try {
+    const url = new URL(NASA_APOD_URL);
+    url.searchParams.set('api_key', NASA_API_KEY);
+    url.searchParams.set('date', date);
+
+    const response = await fetch(url.toString());
+    if (!response.ok) {
+      throw new Error(`API Error: ${response.status}`);
+    }
+
+    const apod = await response.json();
+    
+    if (apod.media_type !== 'image' && apod.media_type !== 'video') {
+      throw new Error('This date does not contain an image or video.');
+    }
+    
+    displayApod(apod);
+  } catch (error) {
+    showError(error.message || 'Unable to fetch image for this date. Please try another.');
     resultSection.classList.add('hidden');
   } finally {
     setLoading(false);
@@ -129,7 +166,6 @@ function hideError() {
   errorSection.classList.add('hidden');
 }
 
-// Favorite management functions
 function getFavorites() {
   const stored = localStorage.getItem(FAVORITES_STORAGE_KEY);
   return stored ? JSON.parse(stored) : [];
@@ -149,23 +185,17 @@ function isFavorited(apod) {
 function toggleFavorite() {
   if (!currentApod) return;
 
-  const favorites = getFavorites();
-  const index = favorites.findIndex(fav => fav.date === currentApod.date);
+  if (isFavorited(currentApod)) return;
 
-  if (index > -1) {
-    // Remove from favorites
-    favorites.splice(index, 1);
-  } else {
-    // Add to favorites
-    const favoriteItem = {
-      title: currentApod.title,
-      date: currentApod.date,
-      explanation: currentApod.explanation,
-      url: currentApod.url,
-      media_type: currentApod.media_type
-    };
-    favorites.push(favoriteItem);
-  }
+  const favorites = getFavorites();
+  const favoriteItem = {
+    title: currentApod.title,
+    date: currentApod.date,
+    explanation: currentApod.explanation,
+    url: currentApod.url,
+    media_type: currentApod.media_type
+  };
+  favorites.push(favoriteItem);
 
   saveFavorites(favorites);
   updateFavoriteButton();
@@ -234,11 +264,21 @@ function closeFavorites() {
 }
 
 loadButton.addEventListener('click', fetchRandomApod);
+searchButton.addEventListener('click', fetchApodByDate);
+dateInput.addEventListener('keydown', (e) => {
+  if (e.key === 'Enter') {
+    fetchApodByDate();
+  }
+});
 favoriteButton.addEventListener('click', toggleFavorite);
 viewFavoritesButton.addEventListener('click', openFavorites);
 closeFavoritesButton.addEventListener('click', closeFavorites);
 
-window.addEventListener('load', updateFavoritesVisibility);
+window.addEventListener('load', () => {
+  updateFavoritesVisibility();
+  const today = new Date();
+  dateInput.max = formatDate(today);
+});
 
 document.addEventListener('click', (e) => {
   if (favoritesSection && !favoritesSection.classList.contains('hidden')) {

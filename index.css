@@ -41,6 +41,62 @@ body {
   line-height: 1.7;
 }
 
+.search-section {
+  margin-top: 2rem;
+  padding-top: 2rem;
+  border-top: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+.search-section h3 {
+  margin: 0 0 1rem;
+  color: #cbd5e1;
+  font-size: 1rem;
+}
+
+.search-controls {
+  display: flex;
+  gap: 1rem;
+  flex-wrap: wrap;
+  justify-content: center;
+  align-items: center;
+}
+
+input[type="date"] {
+  padding: 0.95rem 1rem;
+  font-size: 1rem;
+  border: 1px solid rgba(124, 58, 237, 0.4);
+  border-radius: 8px;
+  background: rgba(30, 41, 59, 0.6);
+  color: #f3f4f6;
+  cursor: pointer;
+  transition: all 150ms ease;
+}
+
+input[type="date"]:hover,
+input[type="date"]:focus-visible {
+  outline: none;
+  border-color: rgba(124, 58, 237, 0.8);
+  background: rgba(30, 41, 59, 0.8);
+  box-shadow: 0 0 0 3px rgba(124, 58, 237, 0.1);
+}
+
+#searchButton {
+  padding: 0.95rem 1.7rem;
+  font-size: 0.95rem;
+  white-space: nowrap;
+}
+
+@media (max-width: 640px) {
+  .search-controls {
+    flex-direction: column;
+  }
+
+  input[type="date"],
+  #searchButton {
+    width: 100%;
+  }
+}
+
 button {
   border: none;
   border-radius: 999px;
